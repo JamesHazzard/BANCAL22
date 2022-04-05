@@ -8,3 +8,8 @@ Therefore the likelihood calculator should contain functions for each type of da
 - Algorithm
 This informs how the {n+1}th model should be sampled based on the {n}th model. 
 Therefore the algorithm/sampling directory should contain a choice of sampling functions 
+
+Structure:
+- Load in the data and data types (for sending to correct function)
+- Select parameterisation choice and load in priors 
+- Select algorithm choice and begin inversion
