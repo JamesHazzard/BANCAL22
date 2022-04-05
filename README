@@ -1,0 +1,10 @@
+Choices:
+- Anelasticity parameterisation
+This informs the parameters we require a prior on, and the equations linking Vs to T. 
+Therefore the anparam directory should contain a folder for each parameterisation, containing thermodynamic conversions and priors
+- Data
+This informs the type of comparison being made. 
+Therefore the likelihood calculator should contain functions for each type of data constraint
+- Algorithm
+This informs how the {n+1}th model should be sampled based on the {n}th model. 
+Therefore the algorithm/sampling directory should contain a choice of sampling functions 
