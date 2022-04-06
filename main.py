@@ -8,6 +8,8 @@ hyperpriors = np.loadtxt('./hyperpriors.txt', skiprows = 1)
 m0 = np.random.normal(loc = priors[0,:], scale = priors[1,:])
 # Initialise data hyperparameters randomly
 h0 = np.random.normal(loc = hyperpriors[0,:], scale = hyperpriors[1,:])
+h0 = np.full(len(hyperpriors[1,:]), 0)
+x0 = np.concatenate((m0, h0))
 
 data_type = ['xenolith', 'plate', 'adiabat', 'attenuation', 'viscosity']
 data_name = ['nodule_obs_all.zTVslln', 'plate.VseTz', 'adiabat.VseTz', 'attenuation.QeVsz', 'viscosity.neVsz']
@@ -39,5 +41,6 @@ data = [data_xenolith, data_plate, data_adiabat, data_attenuation, data_viscosit
 
 n_trials = 1000
 n_burnin = int(0.5*n_trials)
-run_test_algorithm(n_trials, n_burnin, m0, h0, priors, hyperpriors, data, n_xenolith, n_plate, n_adiabat, n_attenuation, n_viscosity)
+n_static = 99
+run_test_algorithm(n_trials, n_burnin, n_static, x0, m0, h0, priors, hyperpriors, data, n_xenolith, n_plate, n_adiabat, n_attenuation, n_viscosity)
 #run_algorithm(n_trials, n_burnin, x0, priors, data_selection, data_length, data_xenolith, data_plate, data_adiabat, data_attenuation, data_viscosity)

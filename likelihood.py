@@ -4,19 +4,16 @@ from thermodynamic_conversions import *
 def likelihood_xenolith(data, m, h):
     # Load in file of structure Vs, sig_Vs, T, depth w/ header 
     #data = np.loadtxt(data, skiprows = 1).T 
-    print(m)
-    print(h)
     #Vs = data[0]
     #sig_Vs = data[1]
     #weighted_sig_Vs = (10**h)*sig_Vs
     #T = data[2]
     #depth = data[3]
     Vs = data[:,2]
-    sig_Vs = 0.01 * Vs
+    sig_Vs = np.full(np.shape(Vs), 0.1)
     weighted_sig_Vs = (10**h)*sig_Vs
     T = data[:,1]
     depth = data[:,0]
-    print(Vs)
     n = len(T)
     Vs_fromT = np.zeros(n)
     Vs_diff = np.zeros(n)
