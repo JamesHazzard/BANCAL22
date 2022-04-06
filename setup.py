@@ -1,0 +1,43 @@
+import numpy as np
+import shutil
+
+def select_data():
+
+    data_type = ['xenolith', 'plate', 'adiabat', 'attenuation', 'viscosity']
+    data_name = ['nodule_obs_all.zTVslln', 'plate.VseTz', 'adiabat.VseTz', 'attenuation.QeVsz', 'viscosity.neVsz']
+    data_xenolith = []
+    data_plate = []
+    data_adiabat = []
+    data_attenuation = []
+    data_viscosity = []
+    data_selection = np.loadtxt('./data/data_selection.txt', skiprows = 1)
+    if data_selection[0] == 1:
+        data_xenolith = np.loadtxt('./data/'+data_type[0]+'/'+data_name[0])
+        data_xenolith = np.split(data_xenolith, np.where(np.diff(data_xenolith[:,5]))[0]+1)
+    if data_selection[1] == 1:
+        data_plate = np.loadtxt('./data/'+data_type[1]+'/'+data_name[1], skiprows = 1).T
+    if data_selection[2] == 1:
+        data_adiabat = np.loadtxt('./data/'+data_type[2]+'/'+data_name[2], skiprows = 1).T
+    if data_selection[3] == 1:
+        data_attenuation = np.loadtxt('./data/'+data_type[3]+'/'+data_name[3], skiprows = 1).T
+    if data_selection[4] == 1:
+        data_viscosity = np.loadtxt('./data/'+data_type[4]+'/'+data_name[4], skiprows = 1).T
+    data_length = [len(data_xenolith), len(data_plate), len(data_adiabat), len(data_attenuation), len(data_viscosity)]
+    n_data = int(np.sum(np.asarray(data_selection)*np.asarray(data_length)))
+
+    return None
+
+def select_param():
+
+    param_selection = str(np.genfromtxt('./anelasticity_parameterisation/parameterisation_selection.txt', dtype = 'str'))
+    priors = np.loadtxt('./anelasticity_parameterisation/'+param_selection+'/priors.txt', skiprows = 1)
+    shutil.copyfile('./anelasticity_parameterisation/'+param_selection+'/thermodynamic_conversions.py', './thermodynamic_conversions.py')
+
+    return None
+
+def select_algorithm():
+
+    algorithm_selection = str(np.genfromtxt('./algorithm_selection.txt', dtype = 'str'))
+    shutil.copyfile('./algorithm/'+algorithm_selection+'.py', './algorithm.py')
+
+    return None
