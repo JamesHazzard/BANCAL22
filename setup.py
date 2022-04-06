@@ -10,34 +10,44 @@ def select_data():
     data_adiabat = []
     data_attenuation = []
     data_viscosity = []
-    data_selection = np.loadtxt('./data/data_selection.txt', skiprows = 1)
+    data_selection = np.loadtxt('./options/data_selection.txt', skiprows = 1)
     if data_selection[0] == 1:
-        data_xenolith = np.loadtxt('./data/'+data_type[0]+'/'+data_name[0])
-        data_xenolith = np.split(data_xenolith, np.where(np.diff(data_xenolith[:,5]))[0]+1)
+        data_xenolith = np.loadtxt('./data/' + data_type[0] + '/'+data_name[0])
+        data_xenolith = np.split(data_xenolith, np.where(np.diff(data_xenolith[:, 5]))[0] + 1)
     if data_selection[1] == 1:
-        data_plate = np.loadtxt('./data/'+data_type[1]+'/'+data_name[1], skiprows = 1).T
+        data_plate = [np.loadtxt('./data/' + data_type[1] + '/' + data_name[1], skiprows = 1).T]
     if data_selection[2] == 1:
-        data_adiabat = np.loadtxt('./data/'+data_type[2]+'/'+data_name[2], skiprows = 1).T
+        data_adiabat = [np.loadtxt('./data/' + data_type[2] + '/' + data_name[2], skiprows = 1).T]
     if data_selection[3] == 1:
-        data_attenuation = np.loadtxt('./data/'+data_type[3]+'/'+data_name[3], skiprows = 1).T
+        data_attenuation = [np.loadtxt('./data/' + data_type[3] + '/' + data_name[3], skiprows = 1).T]
     if data_selection[4] == 1:
-        data_viscosity = np.loadtxt('./data/'+data_type[4]+'/'+data_name[4], skiprows = 1).T
+        data_viscosity = [np.loadtxt('./data/' + data_type[4] + '/' + data_name[4], skiprows = 1).T]
     data_length = [len(data_xenolith), len(data_plate), len(data_adiabat), len(data_attenuation), len(data_viscosity)]
     n_data = int(np.sum(np.asarray(data_selection)*np.asarray(data_length)))
 
-    return None
+    hyperpriors = np.array([np.zeros(n_data), np.ones(n_data)])
+    hyperprior_header = ''
+    for i in range(n_data):
+        hyperprior_header += 'h' + str(i+1) + ' '
+    np.savetxt('./hyperpriors.txt', hyperpriors, header = hyperprior_header, fmt = '%.0f')
+
+    return data_xenolith
 
 def select_param():
 
-    param_selection = str(np.genfromtxt('./anelasticity_parameterisation/parameterisation_selection.txt', dtype = 'str'))
-    priors = np.loadtxt('./anelasticity_parameterisation/'+param_selection+'/priors.txt', skiprows = 1)
+    param_selection = str(np.genfromtxt('./options/parameterisation_selection.txt', dtype = 'str'))
     shutil.copyfile('./anelasticity_parameterisation/'+param_selection+'/thermodynamic_conversions.py', './thermodynamic_conversions.py')
+    shutil.copyfile('./anelasticity_parameterisation/'+param_selection+'/priors.txt', './priors.txt')
 
     return None
 
 def select_algorithm():
 
-    algorithm_selection = str(np.genfromtxt('./algorithm_selection.txt', dtype = 'str'))
+    algorithm_selection = str(np.genfromtxt('./options/algorithm_selection.txt', dtype = 'str'))
     shutil.copyfile('./algorithm/'+algorithm_selection+'.py', './algorithm.py')
 
     return None
+
+select_data()
+select_param()
+select_algorithm()
