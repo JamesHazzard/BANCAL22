@@ -1,7 +1,6 @@
 import numpy as np
 from likelihood import likelihood
 from prior import prior 
-import time
 
 const_e = np.exp(1)
 
@@ -75,6 +74,6 @@ def run_test_algorithm(n_trials, n_burnin, n_static, x0, m0, h0, priors, hyperpr
             likelihood_x = likelihood_y
             accepted_model.append(x)
             n_accepted += 1
-            
+
     save_model = model[:, n_burnin:n_trials]
     return save_model, track_posterior

@@ -4,6 +4,8 @@ from save import *
 import time
 import matplotlib.pyplot as plt
 
+t_start = time.time()
+
 now = create_output_directory(False)
 print("Beginning inversion at", now)
 
@@ -52,8 +54,8 @@ n_trials = 5000
 n_burnin = int(0.5*n_trials)
 n_static = 99
 samples, track_posterior = run_test_algorithm(n_trials, n_burnin, n_static, x0, m0, h0, priors, hyperpriors, data, n_xenolith, n_plate, n_adiabat, n_attenuation, n_viscosity)
-exit()
+
+t_end = time.time()
+print(t_end - t_start)
 
 save_samples(samples, x_labels, now)
-plt.plot(track_posterior)
-plt.savefig('test.jpg', dpi=300)

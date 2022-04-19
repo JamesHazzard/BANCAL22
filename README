@@ -13,3 +13,12 @@ Structure:
 - Load in the data and data types (for sending to correct function)
 - Select parameterisation choice and load in priors 
 - Select algorithm choice and feed data, priors, starting model, number of trials
+
+Analysis:
+- Set of plots (running average, parameter trade-off, autocorrelation)
+- Mean and std model, MAP model
+
+Use: 
+- Select choice of algorithm / data / parameterisation by modifying files in the options directory
+- Run setup.py to apply these choices to the working directory 
+- Run main.py to begin the inversion 
