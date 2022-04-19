@@ -1,8 +1,17 @@
 import numpy as np
 from algorithm import *
+from save import *
+import time
+import matplotlib.pyplot as plt
+
+now = create_output_directory(False)
+print("Beginning inversion at", now)
 
 priors = np.loadtxt('./priors.txt', skiprows = 1)
 hyperpriors = np.loadtxt('./hyperpriors.txt', skiprows = 1)
+m_labels = np.loadtxt('./priors.txt', max_rows = 1, dtype = str)
+h_labels = np.loadtxt('./hyperpriors.txt', max_rows = 1, dtype = str)
+x_labels = np.concatenate((m_labels, h_labels))
 
 # Initialise anelasticity model parameters randomly
 m0 = np.random.normal(loc = priors[0,:], scale = priors[1,:])
@@ -39,8 +48,14 @@ n_viscosity = len(data_viscosity)
 n_data = int(np.sum(np.asarray(data_selection)*np.asarray(data_length)))
 data = [data_xenolith, data_plate, data_adiabat, data_attenuation, data_viscosity]
 
-n_trials = 1000
+n_trials = 10000
 n_burnin = int(0.5*n_trials)
 n_static = 99
-run_test_algorithm(n_trials, n_burnin, n_static, x0, m0, h0, priors, hyperpriors, data, n_xenolith, n_plate, n_adiabat, n_attenuation, n_viscosity)
-#run_algorithm(n_trials, n_burnin, x0, priors, data_selection, data_length, data_xenolith, data_plate, data_adiabat, data_attenuation, data_viscosity)
+t_start = time.time()
+samples, track_posterior = run_test_algorithm(n_trials, n_burnin, n_static, x0, m0, h0, priors, hyperpriors, data, n_xenolith, n_plate, n_adiabat, n_attenuation, n_viscosity)
+t_end = time.time()
+print(t_end - t_start)
+
+save_samples(samples, x_labels, now)
+plt.plot(track_posterior)
+plt.savefig('test.jpg', dpi=300)
