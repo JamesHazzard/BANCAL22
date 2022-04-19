@@ -48,13 +48,11 @@ n_viscosity = len(data_viscosity)
 n_data = int(np.sum(np.asarray(data_selection)*np.asarray(data_length)))
 data = [data_xenolith, data_plate, data_adiabat, data_attenuation, data_viscosity]
 
-n_trials = 10000
+n_trials = 5000
 n_burnin = int(0.5*n_trials)
 n_static = 99
-t_start = time.time()
 samples, track_posterior = run_test_algorithm(n_trials, n_burnin, n_static, x0, m0, h0, priors, hyperpriors, data, n_xenolith, n_plate, n_adiabat, n_attenuation, n_viscosity)
-t_end = time.time()
-print(t_end - t_start)
+exit()
 
 save_samples(samples, x_labels, now)
 plt.plot(track_posterior)

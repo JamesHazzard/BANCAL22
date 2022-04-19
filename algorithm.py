@@ -3,6 +3,8 @@ from likelihood import likelihood
 from prior import prior 
 import time
 
+const_e = np.exp(1)
+
 def run_test_algorithm(n_trials, n_burnin, n_static, x0, m0, h0, priors, hyperpriors, data, n_xenolith, n_plate, n_adiabat, n_attenuation, n_viscosity):
     x = x0
     m = m0
@@ -22,6 +24,7 @@ def run_test_algorithm(n_trials, n_burnin, n_static, x0, m0, h0, priors, hyperpr
     alpha_ideal = 0.234
     gamma = (2.38**2)/n_params
     model = np.zeros((n_params, n_trials))
+    avg_model = np.zeros(n_params)
     track_posterior = np.zeros(n_trials)
     accepted_model = []
     n_accepted = 0
@@ -44,14 +47,21 @@ def run_test_algorithm(n_trials, n_burnin, n_static, x0, m0, h0, priors, hyperpr
             accepted_model.append(x)
             n_accepted += 1
 
+    avg_model = np.mean(model[:,0:n_static], axis = 1) # mean model for first (n_static - 1) trials
+    C = np.cov(model[:,0:n_static]) # empirical covariance for first (n_static - 1) trials
+
     for i in range(n_static, n_trials): 
+        print(np.abs((n_accepted / i) - alpha_ideal))
         track_posterior[i] = prior_x + likelihood_x
         model[:,i] = x
+        delta = x - avg_model
+        C = ((i - 2)/(i - 1)*C) + (1/i)*np.outer(delta, delta)
+        avg_model = ((i - 1)*avg_model + x)/i
         U=np.random.multivariate_normal(np.zeros(n_params), np.eye(n_params))
         if gamma + ((i)**(-0.5))*(np.exp(alpha) - alpha_ideal) > 0:
             gamma += ((i)**(-0.5))*(np.exp(alpha) - alpha_ideal)
-        C = (gamma)*np.cov(accepted_model, rowvar = False) + (1e-30*np.eye(n_params))
-        S = np.linalg.cholesky(C)
+        G = gamma*C + (1e-30*np.eye(n_params))
+        S = np.linalg.cholesky(G)
         y = x + np.matmul(S,U)
         prior_m = prior(priors[0,:], priors[1,:], y[0:n_m])
         prior_h = prior(hyperpriors[0,:], hyperpriors[1,:], y[n_m:])
@@ -65,6 +75,6 @@ def run_test_algorithm(n_trials, n_burnin, n_static, x0, m0, h0, priors, hyperpr
             likelihood_x = likelihood_y
             accepted_model.append(x)
             n_accepted += 1
- 
+            
     save_model = model[:, n_burnin:n_trials]
     return save_model, track_posterior
