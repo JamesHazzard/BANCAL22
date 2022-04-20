@@ -13,7 +13,7 @@ def create_output_directory(f = True):
 
 def save_samples(samples, parameter_labels, now):
     df = pd.DataFrame(data = samples.T, columns = parameter_labels)
-    #df.to_csv('./output/' + now + '/samples_postburnin.csv', index = False, sep = '\t')
-    df.to_csv('./output/test/samples_postburnin.csv', index = False, sep = '\t')
+    df.to_csv('./output/' + now + '/samples_postburnin.csv', index = False, sep = '\t')
+    #df.to_csv('./output/test/samples_postburnin.csv', index = False, sep = '\t')
 
 #save_samples(np.zeros((3, 10)).T, ['mu0', 'dmudT', 'dmudP'], 'now')

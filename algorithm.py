@@ -1,10 +1,15 @@
 import numpy as np
-from likelihood import likelihood
+from likelihood import likelihood, likelihood_pure_xenolith
 from prior import prior 
 
 const_e = np.exp(1)
 
-def run_test_algorithm(n_trials, n_burnin, n_static, x0, m0, h0, priors, hyperpriors, data, n_xenolith, n_plate, n_adiabat, n_attenuation, n_viscosity):
+def run_test_algorithm(n_trials, n_burnin, n_static, x0, m0, h0, priors, hyperpriors, data, n_data):
+    n_xenolith = n_data[0]
+    n_plate = n_data[1]
+    n_adiabat = n_data[2]
+    n_attenuation = n_data[3]
+    n_viscosity = n_data[4]
     x = x0
     m = m0
     h = h0
@@ -14,7 +19,7 @@ def run_test_algorithm(n_trials, n_burnin, n_static, x0, m0, h0, priors, hyperpr
     prior_m = prior(priors[0,:], priors[1,:], m)
     prior_h = prior(hyperpriors[0,:], hyperpriors[1,:], h)
     prior_x = prior_m + prior_h
-    likelihood_x = likelihood(data, m, h, n_xenolith, n_plate, n_adiabat, n_attenuation, n_viscosity)
+    likelihood_x, RMS_x = likelihood(data, m, h, n_xenolith, n_plate, n_adiabat, n_attenuation, n_viscosity)
     print(prior_x, likelihood_x)
     proposal_priors = (priors[1,:] / 50)**2
     proposal_hyperpriors = np.full(n_h, 0.1**2)
@@ -36,13 +41,14 @@ def run_test_algorithm(n_trials, n_burnin, n_static, x0, m0, h0, priors, hyperpr
         prior_m = prior(priors[0,:], priors[1,:], y[0:n_m])
         prior_h = prior(hyperpriors[0,:], hyperpriors[1,:], y[n_m:])
         prior_y = prior_m + prior_h
-        likelihood_y = likelihood(data, y[0:n_m], y[n_m:], n_xenolith, n_plate, n_adiabat, n_attenuation, n_viscosity) 
+        likelihood_y, RMS_y = likelihood(data, y[0:n_m], y[n_m:], n_xenolith, n_plate, n_adiabat, n_attenuation, n_viscosity) 
         alpha = min(0, (likelihood_y - likelihood_x) + (prior_y - prior_x))
         u = np.log(np.random.uniform(low = 0, high = 1, size = 1))
         if u < alpha: 
             x = y
             prior_x = prior_y
             likelihood_x = likelihood_y
+            RMS_x = RMS_y
             accepted_model.append(x)
             n_accepted += 1
 
@@ -50,7 +56,9 @@ def run_test_algorithm(n_trials, n_burnin, n_static, x0, m0, h0, priors, hyperpr
     C = np.cov(model[:,0:n_static]) # empirical covariance for first (n_static - 1) trials
 
     for i in range(n_static, n_trials): 
-        print(np.abs((n_accepted / i) - alpha_ideal))
+        if i%100 == 0: 
+            #print(i, np.abs((n_accepted / i) - alpha_ideal), prior_x + likelihood_x)
+            print(i, prior_x + likelihood_x, np.log10(RMS_x[0]) - x[n_m:])
         track_posterior[i] = prior_x + likelihood_x
         model[:,i] = x
         delta = x - avg_model
@@ -65,15 +73,16 @@ def run_test_algorithm(n_trials, n_burnin, n_static, x0, m0, h0, priors, hyperpr
         prior_m = prior(priors[0,:], priors[1,:], y[0:n_m])
         prior_h = prior(hyperpriors[0,:], hyperpriors[1,:], y[n_m:])
         prior_y = prior_m + prior_h
-        likelihood_y = likelihood(data, y[0:n_m], y[n_m:], n_xenolith, n_plate, n_adiabat, n_attenuation, n_viscosity) 
+        likelihood_y, RMS_y = likelihood(data, y[0:n_m], y[n_m:], n_xenolith, n_plate, n_adiabat, n_attenuation, n_viscosity) 
         alpha = min(0, (likelihood_y - likelihood_x) + (prior_y - prior_x))
         u = np.log(np.random.uniform(low = 0, high = 1, size = 1))
         if u < alpha: 
             x = y
             prior_x = prior_y
             likelihood_x = likelihood_y
+            RMS_x = RMS_y
             accepted_model.append(x)
             n_accepted += 1
 
-    save_model = model[:, n_burnin:n_trials]
-    return save_model, track_posterior
+    model = model[:, n_burnin:n_trials]
+    return model, track_posterior

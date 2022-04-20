@@ -48,10 +48,10 @@ delphi=0.
 gamma=5.
 lambdaphi=0.
 
-def funcVs(T,Vs_obs,mu0,dmudT,dmudP,eta0,E,Va,dTdz,sol50,dep):
+def funcVs(T,Vs_obs,m,dep):
 
   # Difference between observed and calculated temperature
-  funcVs=np.abs(Vs_obs-Vs_calc(mu0,dmudT,dmudP,eta0,E,Va,dTdz,sol50,T,dep))
+  funcVs=np.abs(Vs_obs-Vs_calc(m,T,dep))
   return funcVs
 
 def funcV0(x,Pin,K0,KT):
@@ -136,7 +136,7 @@ def Q_calc(m,Vs,dep):
   sol50 = 1380
 
   # Initialise parameters for attenuation
-  T=optimize.brent(funcVs,brack=(AX,CX),args=(Vs,mu0,dmudT,dmudP,eta0,E,Va,dTdz,sol50,dep,),tol=tol)
+  T=optimize.brent(funcVs,brack=(AX,CX),args=(Vs,m,dep,),tol=tol)
   TK=T+273.
   Pg=(dep/30.)
   P=Pg*1.e9
@@ -197,7 +197,7 @@ def visc_calc(m,Vs,dep):
   sol50 = 1380
   
   # Initialise parameters for viscosity
-  T=optimize.brent(funcVs,brack=(AX,CX),args=(Vs,mu0,dmudT,dmudP,eta0,E,Va,dTdz,sol50,dep,),tol=tol)
+  T=optimize.brent(funcVs,brack=(AX,CX),args=(Vs,m,dep,),tol=tol)
   TK=T+273.
   Pg=(dep/30.)
   P=Pg*1.e9

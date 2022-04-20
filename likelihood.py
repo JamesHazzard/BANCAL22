@@ -2,13 +2,7 @@ import numpy as np
 from thermodynamic_conversions import *
 
 def likelihood_xenolith(data, m, h):
-    # Load in file of structure Vs, sig_Vs, T, depth w/ header 
-    #data = np.loadtxt(data, skiprows = 1).T 
-    #Vs = data[0]
-    #sig_Vs = data[1]
-    #weighted_sig_Vs = (10**h)*sig_Vs
-    #T = data[2]
-    #depth = data[3]
+    # Load in file of structure Vs, sig_Vs, T, depth w/ header
     Vs = data[:,2]
     sig_Vs = np.full(np.shape(Vs), 0.1)
     weighted_sig_Vs = (10**h)*sig_Vs
@@ -112,19 +106,35 @@ def likelihood(data, m, h, n_xenolith, n_plate, n_adiabat, n_attenuation, n_visc
     P_adiabat = 0
     P_attenuation = 0
     P_viscosity = 0
+    RMS_xenolith = []
+    RMS_plate = 0
+    RMS_adiabat = 0
+    RMS_attenuation = 0
+    RMS_viscosity = 0
     if n_xenolith > 0: 
-        RMS_xenolith = 0
         #for i in range(1):
         for i in range(n_xenolith):
             P_xenolith_individual, RMS_xenolith_individual = likelihood_xenolith(data[0][i], m, h[i])
             P_xenolith += P_xenolith_individual
-            RMS_xenolith += RMS_xenolith_individual
+            RMS_xenolith.append(RMS_xenolith_individual)
     if n_plate > 0:
-        P_plate, RMS_plate = likelihood_Vs_plate(data[1], m, h[n_xenolith])
+        P_plate, RMS_plate = likelihood_Vs_plate(data[1][0], m, h[n_xenolith])
     if n_adiabat > 0:   
-        P_adiabat, RMS_adiabat = likelihood_Vs_adiabat(data[2], m, h[n_xenolith + n_plate])
+        P_adiabat, RMS_adiabat = likelihood_Vs_adiabat(data[2][0], m, h[n_xenolith + n_plate])
     if n_attenuation > 0:
-        P_attenuation, RMS_attenuation = likelihood_attenuation(data[3], m, h[n_xenolith + n_plate + n_adiabat])
+        P_attenuation, RMS_attenuation = likelihood_attenuation(data[3][0], m, h[n_xenolith + n_plate + n_adiabat])
     if n_viscosity > 0:
-        P_viscosity, RMS_viscosity = likelihood_viscosity(data[4], m, h[n_xenolith + n_plate + n_adiabat + n_attenuation])
-    return P_xenolith + P_plate + P_adiabat + P_attenuation + P_viscosity
+        if n_viscosity > 1:
+            P_viscosity, RMS_viscosity = likelihood_viscosity(data[4][0], m, h[n_xenolith + n_plate + n_adiabat + n_attenuation])
+        else:
+            P_viscosity, RMS_viscosity = likelihood_viscosity(data[4][0], m, 0)
+    return P_xenolith + P_plate + P_adiabat + P_attenuation + P_viscosity, [RMS_xenolith, RMS_plate, RMS_adiabat, RMS_attenuation, RMS_viscosity]
+
+def likelihood_pure_xenolith(data, m, h, n_xenolith):
+    P_xenolith = 0
+    RMS_xenolith = 0
+    for i in range(n_xenolith):
+            P_xenolith_individual, RMS_xenolith_individual = likelihood_xenolith(data[0][i], m, h[i])
+            P_xenolith += P_xenolith_individual
+            RMS_xenolith += RMS_xenolith_individual
+    return P_xenolith

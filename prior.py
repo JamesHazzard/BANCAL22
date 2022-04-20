@@ -11,3 +11,13 @@ def prior(prior_means,prior_sigmas,y):
         #prior_y[i]=np.longdouble((np.exp(-0.5*(((dist_val-mu)/sig)**2)))/(np.sqrt(2*np.pi)*sig))
         prior_y[i] = -0.5*(((dist_val-mu)/sig)**2) - np.log(const_pi*sig)
     return np.sum(prior_y)
+
+def get_starting_model():
+    priors = np.loadtxt('./priors.txt', skiprows = 1)
+    hyperpriors = np.loadtxt('./hyperpriors.txt', skiprows = 1)
+
+    m0 = np.random.normal(loc = priors[0,:], scale = priors[1,:]) # Initialise anelasticity model parameters randomly
+    #h0 = np.random.normal(loc = hyperpriors[0,:], scale = hyperpriors[1,:]) # Initialise data hyperparameters randomly
+    h0 = np.full(len(hyperpriors[1,:]), 0) # Initialise data hyperparameters at h=1
+    x0 = np.concatenate((m0, h0)) # Join model params and hyperparams
+    return x0, m0, h0, priors, hyperpriors
