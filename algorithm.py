@@ -36,7 +36,7 @@ def run_test_algorithm(n_trials, n_burnin, n_static, x0, m0, h0, priors, hyperpr
 
     for i in range(n_static):
         model[:,i] = x
-        RMS[:,i] = RMS_x
+        RMS[:,i] = np.log10(RMS_x)
         track_posterior[i] = prior_x + likelihood_x
         U=np.random.multivariate_normal(np.zeros(n_params), np.eye(n_params))
         y = x + np.matmul(S0,U)
@@ -58,12 +58,12 @@ def run_test_algorithm(n_trials, n_burnin, n_static, x0, m0, h0, priors, hyperpr
     C = np.cov(model[:,0:n_static]) # empirical covariance for first (n_static - 1) trials
 
     for i in range(n_static, n_trials): 
-        if i%100 == 0: 
+        if i%1000 == 0: 
             #print(i, np.abs((n_accepted / i) - alpha_ideal), prior_x + likelihood_x)
-            print(i, prior_x + likelihood_x, np.log10(RMS_x[0]) - x[n_m:])
+            print(i, np.abs((n_accepted / i) - alpha_ideal), prior_x + likelihood_x, np.log10(RMS_x[0]) - x[n_m:])
         track_posterior[i] = prior_x + likelihood_x
         model[:,i] = x
-        RMS[:,i] = RMS_x
+        RMS[:,i] = np.log10(RMS_x)
         delta = x - avg_model
         C = ((i - 2)/(i - 1)*C) + (1/i)*np.outer(delta, delta)
         avg_model = ((i - 1)*avg_model + x)/i

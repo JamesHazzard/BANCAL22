@@ -17,7 +17,7 @@ def likelihood_xenolith(data, m, h):
         Vs_diff[i] = ((Vs[i] - Vs_fromT[i]) / weighted_sig_Vs[i])**2
         RMS += (Vs[i] - Vs_fromT[i])**2
     chi_squared = np.sum(Vs_diff)
-    P = -0.5 * chi_squared - np.log(((2*np.pi)**(n/2))*np.prod(weighted_sig_Vs, dtype=np.longdouble)*1e+150) + np.log(1e+150)
+    P = -0.5 * chi_squared - np.log(((2*np.pi)**(n/2))*np.prod(weighted_sig_Vs, dtype=np.longdouble))
     RMS = np.sqrt(RMS / n) / np.mean(sig_Vs)
     return P, RMS
 

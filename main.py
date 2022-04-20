@@ -8,18 +8,16 @@ import matplotlib.pyplot as plt
 
 t_start = time.time()
 
-now = create_output_directory(False) # get current time and produce an output directory using this timestamp
+now = create_output_directory(True) # get current time and produce an output directory using this timestamp
 print("Beginning inversion at", now)
 
 data, n_data = get_data() # retrieve inversion data
 x0, m0, h0, priors, hyperpriors = get_starting_model() # generate a starting model
 
-n_trials = 100
+n_trials = 100000
 n_burnin = int(0.5*n_trials)
 n_static = 99
 samples, RMS, track_posterior = run_test_algorithm(n_trials, n_burnin, n_static, x0, m0, h0, priors, hyperpriors, data, n_data)
-print(np.shape(RMS.T), np.shape(samples.T))
-print(np.shape(np.concatenate((RMS.T, samples.T), axis = 1)))
 stack = np.concatenate((samples.T, RMS.T), axis = 1)
 
 t_end = time.time()
