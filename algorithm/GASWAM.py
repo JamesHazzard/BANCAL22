@@ -28,6 +28,7 @@ def run_test_algorithm(n_trials, n_burnin, n_static, x0, m0, h0, priors, hyperpr
     alpha_ideal = 0.234
     gamma = (2.38**2)/n_params
     model = np.zeros((n_params, n_trials))
+    RMS = np.zeros((n_h, n_trials))
     avg_model = np.zeros(n_params)
     track_posterior = np.zeros(n_trials)
     accepted_model = []
@@ -35,6 +36,7 @@ def run_test_algorithm(n_trials, n_burnin, n_static, x0, m0, h0, priors, hyperpr
 
     for i in range(n_static):
         model[:,i] = x
+        RMS[:,i] = RMS_x
         track_posterior[i] = prior_x + likelihood_x
         U=np.random.multivariate_normal(np.zeros(n_params), np.eye(n_params))
         y = x + np.matmul(S0,U)
@@ -61,6 +63,7 @@ def run_test_algorithm(n_trials, n_burnin, n_static, x0, m0, h0, priors, hyperpr
             print(i, prior_x + likelihood_x, np.log10(RMS_x[0]) - x[n_m:])
         track_posterior[i] = prior_x + likelihood_x
         model[:,i] = x
+        RMS[:,i] = RMS_x
         delta = x - avg_model
         C = ((i - 2)/(i - 1)*C) + (1/i)*np.outer(delta, delta)
         avg_model = ((i - 1)*avg_model + x)/i
@@ -84,5 +87,4 @@ def run_test_algorithm(n_trials, n_burnin, n_static, x0, m0, h0, priors, hyperpr
             accepted_model.append(x)
             n_accepted += 1
 
-    model = model[:, n_burnin:n_trials]
-    return model, track_posterior
+    return model, RMS, track_posterior
