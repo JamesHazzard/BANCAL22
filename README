@@ -1,3 +1,9 @@
+Welcome to BANCAL22, a code written to allow one to perform a Bayesian inversion for the calibration of experimental parameterisations of anelsaticity.
+
+This code is functional, but still in a state of development, and will be updated soon with more user-friendly features and instructions. 
+
+In the mean time, feel free to send an email (j.hazzard20@imperial.ac.uk) if you need help with any aspect of using the code.
+
 Choices:
 - Anelasticity parameterisation
 This informs the parameters we require a prior on, and the equations linking Vs to T. 
