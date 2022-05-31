@@ -30,14 +30,14 @@ def run_test_algorithm(n_trials, n_burnin, n_static, x0, m0, h0, priors, hyperpr
     model = np.zeros((n_params, n_trials))
     RMS = np.zeros((n_h, n_trials))
     avg_model = np.zeros(n_params)
-    track_posterior = np.zeros(n_trials)
+    track_posterior = np.zeros((1, n_trials))
     accepted_model = []
     n_accepted = 0
 
     for i in range(n_static):
         model[:,i] = x
         RMS[:,i] = np.log10(RMS_x)
-        track_posterior[i] = prior_x + likelihood_x
+        track_posterior[0, i] = prior_x + likelihood_x
         U=np.random.multivariate_normal(np.zeros(n_params), np.eye(n_params))
         y = x + np.matmul(S0,U)
         prior_m = prior(priors[0,:], priors[1,:], y[0:n_m])
@@ -61,7 +61,7 @@ def run_test_algorithm(n_trials, n_burnin, n_static, x0, m0, h0, priors, hyperpr
         if i%1000 == 0: 
             #print(i, np.abs((n_accepted / i) - alpha_ideal), prior_x + likelihood_x)
             print(i, np.abs((n_accepted / i) - alpha_ideal), prior_x + likelihood_x, np.log10(RMS_x[0]) - x[n_m:])
-        track_posterior[i] = prior_x + likelihood_x
+        track_posterior[0, i] = prior_x + likelihood_x
         model[:,i] = x
         RMS[:,i] = np.log10(RMS_x)
         delta = x - avg_model

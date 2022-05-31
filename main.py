@@ -14,11 +14,11 @@ print("Beginning inversion at", now)
 data, n_data = get_data() # retrieve inversion data
 x0, m0, h0, priors, hyperpriors = get_starting_model() # generate a starting model
 
-n_trials = 100000
+n_trials = 1600000
 n_burnin = int(0.5*n_trials)
 n_static = 99
 samples, RMS, track_posterior = run_test_algorithm(n_trials, n_burnin, n_static, x0, m0, h0, priors, hyperpriors, data, n_data)
-stack = np.concatenate((samples.T, RMS.T), axis = 1)
+stack = np.concatenate((track_posterior.T, samples.T, RMS.T), axis = 1)
 
 t_end = time.time()
 print(t_end - t_start)
@@ -28,5 +28,5 @@ h_labels = np.loadtxt('./hyperpriors.txt', max_rows = 1, dtype = str, comments =
 RMS_labels = []
 for i in range(len(h_labels)):
     RMS_labels.append('RMS' + str(i + 1))
-x_labels = np.concatenate((m_labels, h_labels, RMS_labels)) # Join labels
+x_labels = np.concatenate((['Posterior'], m_labels, h_labels, RMS_labels)) # Join labels
 save_samples(stack, x_labels, now) # Save model samples
