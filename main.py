@@ -21,7 +21,7 @@ samples, RMS, track_posterior = run_test_algorithm(n_trials, n_burnin, n_static,
 stack = np.concatenate((track_posterior.T, samples.T, RMS.T), axis = 1)
 
 t_end = time.time()
-print(t_end - t_start)
+print("Inversion completed in", t_end - t_start, "seconds")
 
 m_labels = np.loadtxt('./priors.txt', max_rows = 1, dtype = str) # Get param labels for saving 
 h_labels = np.loadtxt('./hyperpriors.txt', max_rows = 1, dtype = str, comments = None)[1:] # Get hyperparam labels for saving

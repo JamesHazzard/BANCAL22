@@ -10,9 +10,9 @@ def create_output_directory(f = True):
     now = now.strftime("%Y-%m-%d_%H:%M:%S")
     if f == True:
         os.makedirs('./output/' + now)
-        shutil.copyfile('./options/data_selection.txt', './output/data_selection.txt')
-        shutil.copyfile('./options/parameterisation_selection.txt', './output/parameterisation_selection.txt')
-        shutil.copyfile('./options/algorithm_selection.txt', './output/algorithm_selection')
+        shutil.copyfile('./options/data_selection.txt', './output/' + now + '/data_selection.txt')
+        shutil.copyfile('./options/parameterisation_selection.txt', './output/' + now + '/parameterisation_selection.txt')
+        shutil.copyfile('./options/algorithm_selection.txt', './output/' + now + '/algorithm_selection.txt')
     return now
 
 def save_samples(samples, parameter_labels, now):
