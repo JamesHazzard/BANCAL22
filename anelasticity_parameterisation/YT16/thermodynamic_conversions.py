@@ -124,6 +124,13 @@ def Vs_calc(m,T,dep):
   Vs=1./(np.sqrt(rho*J1)*1000.)
   return Vs
 
+def T_calc(m,Vs,dep):
+
+  # Calculate temperature from Vs based on optimisation
+  T=optimize.brent(funcVs,brack=(AX,CX),args=(Vs,m,dep,),tol=tol)
+
+  return T
+
 def Q_calc(m,Vs,dep):
 
   mu0 = m[0]

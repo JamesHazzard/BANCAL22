@@ -16,7 +16,7 @@ def get_data():
     if data_selection[1] == 1:
         data_plate = [np.loadtxt('./data/' + data_type[1] + '/' + data_name[1], skiprows = 1).T]
     if data_selection[2] == 1:
-        data_adiabat = [np.loadtxt('./data/' + data_type[2] + '/' + data_name[2], skiprows = 1).T]
+        data_adiabat = [np.loadtxt('./data/' + data_type[2] + '/' + data_name[2], skiprows = 0).T]
     if data_selection[3] == 1:
         data_attenuation = [np.loadtxt('./data/' + data_type[3] + '/' + data_name[3], skiprows = 1).T]
     if data_selection[4] == 1:

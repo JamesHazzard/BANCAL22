@@ -4,21 +4,21 @@ from thermodynamic_conversions import *
 def likelihood_xenolith(data, m, h):
     # Load in file of structure Vs, sig_Vs, T, depth w/ header
     Vs = data[:,2]
-    sig_Vs = np.full(np.shape(Vs), 0.1)
-    weighted_sig_Vs = (10**h)*sig_Vs
     T = data[:,1]
+    sig_T = np.full(np.shape(T), 100)
+    weighted_sig_T = (10**h)*sig_T
     depth = data[:,0]
     n = len(T)
-    Vs_fromT = np.zeros(n)
-    Vs_diff = np.zeros(n)
+    T_fromVs = np.zeros(n)
+    T_diff = np.zeros(n)
     RMS = 0 
     for i in range(n):
-        Vs_fromT[i] = Vs_calc(m, T[i], depth[i])
-        Vs_diff[i] = ((Vs[i] - Vs_fromT[i]) / weighted_sig_Vs[i])**2
-        RMS += (Vs[i] - Vs_fromT[i])**2
-    chi_squared = np.sum(Vs_diff)
-    P = -0.5 * chi_squared - np.log(((2*np.pi)**(n/2))*np.prod(weighted_sig_Vs, dtype=np.longdouble))
-    RMS = np.sqrt(RMS / n) / np.mean(sig_Vs)
+        T_fromVs[i] = T_calc(m, Vs[i], depth[i])
+        T_diff[i] = ((T[i] - T_fromVs[i]) / weighted_sig_T[i])**2
+        RMS += (T[i] - T_fromVs[i])**2
+    chi_squared = np.sum(T_diff)
+    P = -0.5 * chi_squared - np.log(((2*np.pi)**(n/2))*np.prod(weighted_sig_T, dtype=np.longdouble))
+    RMS = np.sqrt(RMS / n) / np.mean(sig_T)
     return P, RMS
 
 def likelihood_Vs_plate(data, m, h):
