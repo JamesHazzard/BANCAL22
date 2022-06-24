@@ -65,7 +65,7 @@ def run_test_algorithm(n_trials, n_burnin, n_static, x0, m0, h0, priors, hyperpr
     avg_model = np.mean(model[:,0:n_static], axis = 1) # mean model for first (n_static - 1) trials
     C = np.cov(model[:,0:n_static]) # empirical covariance for first (n_static - 1) trials
 
-    for i in range(n_static, n_static + n_static): 
+    for i in range(n_static, n_trials): 
         if i%10 == 0: 
             #print(i, np.abs((n_accepted / i) - alpha_ideal), prior_x + likelihood_x)
             print(i, np.abs((n_accepted / i) - alpha_ideal), prior_x + likelihood_x, np.log10(RMS_x[0]) - x[n_m:])
@@ -80,38 +80,6 @@ def run_test_algorithm(n_trials, n_burnin, n_static, x0, m0, h0, priors, hyperpr
         U=np.random.multivariate_normal(np.zeros(n_params), np.eye(n_params))
         if gamma + ((i)**(-0.5))*(np.exp(alpha) - alpha_ideal) > 0:
             gamma += ((i)**(-0.5))*(np.exp(alpha) - alpha_ideal)
-        G = gamma*C + (1e-30*np.eye(n_params))
-        S = np.linalg.cholesky(G)
-        y = x + np.matmul(S,U)
-        prior_m = prior(priors[0,:], priors[1,:], y[0:n_m])
-        prior_h = prior(hyperpriors[0,:], hyperpriors[1,:], y[n_m:])
-        prior_y = prior_m + prior_h
-        likelihood_y, RMS_y = likelihood(data, y[0:n_m], y[n_m:], n_xenolith, n_plate, n_adiabat, n_attenuation, n_viscosity) 
-        alpha = min(0, (likelihood_y - likelihood_x) + (prior_y - prior_x))
-        u = np.log(np.random.uniform(low = 0, high = 1, size = 1))
-        if u < alpha: 
-            x = y
-            prior_x = prior_y
-            likelihood_x = likelihood_y
-            RMS_x = RMS_y
-            accepted_model.append(x)
-            n_accepted += 1
-
-
-    for i in range(n_static + n_static, n_trials): 
-        if i%10 == 0: 
-            #print(i, np.abs((n_accepted / i) - alpha_ideal), prior_x + likelihood_x)
-            print(i, np.abs((n_accepted / i) - alpha_ideal), prior_x + likelihood_x, np.log10(RMS_x[0]) - x[n_m:])
-            print(time.time() - t_init)
-            t_init = time.time()
-        track_posterior[0, i] = prior_x + likelihood_x
-        model[:,i] = x
-        RMS[:,i] = np.log10(RMS_x)
-        delta = x - avg_model
-        C = ((i - 2)/(i - 1)*C) + (1/i)*np.outer(delta, delta)
-        avg_model = ((i - 1)*avg_model + x)/i
-        U=np.random.multivariate_normal(np.zeros(n_params), np.eye(n_params))
-        gamma += ((i)**(-0.5))*(np.exp(alpha) - alpha_ideal)
         G = gamma*C + (1e-30*np.eye(n_params))
         S = np.linalg.cholesky(G)
         y = x + np.matmul(S,U)
