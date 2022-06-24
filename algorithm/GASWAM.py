@@ -37,6 +37,12 @@ def run_test_algorithm(n_trials, n_burnin, n_static, x0, m0, h0, priors, hyperpr
     t_init=time.time()
 
     for i in range(n_static):
+        if (i-1)%10 == 0:
+            print(i) 
+            #print(i, np.abs((n_accepted / i) - alpha_ideal), prior_x + likelihood_x)
+            print(i, np.abs((n_accepted / i) - alpha_ideal), prior_x + likelihood_x, np.log10(RMS_x[0]) - x[n_m:])
+            print(time.time() - t_init)
+            t_init = time.time()    
         model[:,i] = x
         RMS[:,i] = np.log10(RMS_x)
         track_posterior[0, i] = prior_x + likelihood_x

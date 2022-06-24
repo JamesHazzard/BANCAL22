@@ -25,7 +25,7 @@ freq=0.01
 # Brent temperature minimization bounds
 AX=0.
 CX=2000.
-tol=1e-4
+tol=1e-3
 
 # Other parameters (density, compressibility etc.):
 rho0=3300.
@@ -47,6 +47,11 @@ beta=0.
 delphi=0.
 gamma=5.
 lambdaphi=0.
+
+# Set dV0 vs. P parameterisation parameters
+y_a = -7.334963115431564676e-23
+y_b = 7.510867653681621105e-12
+y_c = 1.000184023114681908e+00
 
 def funcVs(T,Vs_obs,m,dep):
 
@@ -114,7 +119,8 @@ def Vs_calc(m,T,dep):
   J1=Ju*(1.+((Ab*(tauS**alpha))/alpha)+((np.sqrt(2.*np.pi)/2.)*Ap*sigmap*(1.-erf((np.log(tauP/tauS))/(np.sqrt(2.)*sigmap)))))
 
   # include pressure and temperature-dependent alpha
-  dV0=optimize.brent(funcV0,brack=(AY,CY),args=(P,K0,KT,),tol=tol)
+  #dV0=optimize.brent(funcV0,brack=(AY,CY),args=(P,K0,KT,),tol=tol)
+  dV0=y_a*P**2 + y_b*P + y_c
   alphaP0=dV0*np.exp((grun+1.)*((dV0**(-1.))-1.))
   rhoP0=p0*dV0
   intalphaT=(a0*(TK-273.))+((a1/2.)*((TK**2.)-(273.**2.)))
@@ -127,7 +133,7 @@ def Vs_calc(m,T,dep):
 def T_calc(m,Vs,dep):
 
   # Calculate temperature from Vs based on optimisation
-  T=optimize.brent(funcVs,brack=(AX,CX),args=(Vs,m,dep,),tol=tol)
+  T=optimize.brent(funcVs,brack=(AX,CX),args=(Vs,m,dep,),tol=1e-3)
 
   return T
 
