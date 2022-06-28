@@ -15,7 +15,8 @@ def create_output_directory(f = True):
         shutil.copyfile('./options/algorithm_selection.txt', './output/' + now + '/algorithm_selection.txt')
     return now
 
-def save_samples(samples, parameter_labels, now):
+def save_samples(samples, parameter_labels, now, n_burnin):
     df = pd.DataFrame(data = samples, columns = parameter_labels)
-    df.to_csv('./output/' + now + '/samples_postburnin.csv', index = False, sep = '\t')
-    #df.to_csv('./output/test/samples_postburnin.csv', index = False, sep = ' ', float_format = '%.10f')
+    df.to_csv('./output/' + now + '/samples.csv', index = False, sep = '\t')
+    df2 = pd.DataFrame(data = samples, columns = parameter_labels).iloc[n_burnin:]
+    df2.to_csv('./output/' + now + '/samples_postburnin.csv', index = False, sep = '\t')
