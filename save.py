@@ -13,6 +13,7 @@ def create_output_directory(f = True):
         shutil.copyfile('./options/data_selection.txt', './output/' + now + '/data_selection.txt')
         shutil.copyfile('./options/parameterisation_selection.txt', './output/' + now + '/parameterisation_selection.txt')
         shutil.copyfile('./options/algorithm_selection.txt', './output/' + now + '/algorithm_selection.txt')
+        shutil.copytree('./data', './output/' + now + '/data', dirs_exist_ok=True)
     return now
 
 def save_samples(samples, parameter_labels, now, n_burnin):
