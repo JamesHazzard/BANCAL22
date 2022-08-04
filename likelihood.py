@@ -62,6 +62,26 @@ def likelihood_Vs_plate(data, m, h):
     return P, RMS
 
 def likelihood_Vs_adiabat(data, m, h):
+    # Load in file of structure Vs, T, sig_T, depth w/ header 
+    Vs = data[0]
+    T = data[2]
+    sig_T = np.full(np.shape(T), 100)
+    weighted_sig_T = (10**h)*sig_T
+    depth = data[3]
+    n = len(T)
+    T_fromVs = np.zeros(n)
+    T_diff = np.zeros(n)
+    RMS = 0 
+    for i in range(n):
+        T_fromVs[i] = T_calc(m, Vs[i], depth[i])
+        T_diff[i] = ((T[i] - T_fromVs[i]) / weighted_sig_T[i])**2
+        RMS += (T[i] - T_fromVs[i])**2
+    chi_squared = np.sum(T_diff)
+    P = -0.5 * chi_squared - np.log(((2*np.pi)**(n/2))*np.prod(weighted_sig_T, dtype=np.longdouble))
+    RMS = np.sqrt(RMS / n) / np.mean(sig_T)
+    return P, RMS
+
+def likelihood_Vs_adiabat_old(data, m, h):
     # Load in file of structure Vs, sig_Vs, T, depth w/ header 
     Vs = data[0]
     sig_Vs = data[1]
@@ -140,10 +160,7 @@ def likelihood(data, m, h, n_xenolith, n_plate, n_adiabat, n_attenuation, n_visc
     if n_attenuation > 0:
         P_attenuation, RMS[n_xenolith + n_plate + n_adiabat] = likelihood_attenuation(data[3][0], m, h[n_xenolith + n_plate + n_adiabat])
     if n_viscosity > 0:
-        if n_viscosity > 1:
-            P_viscosity, RMS[n_xenolith + n_plate + n_adiabat + n_viscosity] = likelihood_viscosity(data[4][0], m, h[n_xenolith + n_plate + n_adiabat + n_attenuation])
-        else:
-            P_viscosity, RMS[n_xenolith + n_plate + n_adiabat + n_viscosity] = likelihood_viscosity(data[4][0], m, 0)
+        P_viscosity, RMS[n_xenolith + n_plate + n_adiabat + n_viscosity] = likelihood_viscosity(data[4][0], m, 0)
     return P_xenolith + P_plate + P_adiabat + P_attenuation + P_viscosity, RMS
 
 def likelihood_pure_xenolith(data, m, h, n_xenolith):

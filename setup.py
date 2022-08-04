@@ -22,7 +22,7 @@ def select_data():
         data_attenuation = [np.loadtxt('./data/' + data_type[3] + '/' + data_name[3], skiprows = 1).T]
     if data_selection[4] == 1:
         data_viscosity = [np.loadtxt('./data/' + data_type[4] + '/' + data_name[4], skiprows = 1).T]
-    data_length = [len(data_xenolith), len(data_plate), len(data_adiabat), len(data_attenuation), len(data_viscosity)]
+    data_length = [len(data_xenolith), len(data_plate), len(data_adiabat), len(data_attenuation), 0]
     n_data = int(np.sum(np.asarray(data_selection)*np.asarray(data_length)))
 
     hyperpriors = np.array([np.zeros(n_data), np.ones(n_data)])

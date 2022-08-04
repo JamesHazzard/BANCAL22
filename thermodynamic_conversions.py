@@ -74,7 +74,7 @@ def Vs_calc(m,T,dep):
   E = m[4]
   Va = m[5]
   dTdz = m[6]
-  sol50 = 1380
+  sol50 = 1326
 
   Pg=(dep/30.)
   P=Pg*1.e9
@@ -146,7 +146,7 @@ def Q_calc(m,Vs,dep):
   E = m[4]
   Va = m[5]
   dTdz = m[6]
-  sol50 = 1380
+  sol50 = 1326
 
   # Initialise parameters for attenuation
   T=optimize.brent(funcVs,brack=(AX,CX),args=(Vs,m,dep,),tol=tol)
@@ -207,7 +207,7 @@ def visc_calc(m,Vs,dep):
   E = m[4]
   Va = m[5]
   dTdz = m[6]
-  sol50 = 1380
+  sol50 = 1326
   
   # Initialise parameters for viscosity
   T=optimize.brent(funcVs,brack=(AX,CX),args=(Vs,m,dep,),tol=tol)
