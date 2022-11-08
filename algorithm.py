@@ -16,6 +16,10 @@ def run_test_algorithm(n_trials, n_burnin, n_static, x0, m0, h0, priors, hyperpr
     h = h0
     n_m = len(m)
     n_h = len(h)
+    if n_viscosity > 0:
+        n_h_RMS = n_h + 1 # if viscosity data set being used, track RMS, but do not use hyperparameter on this data set
+    else: 
+        n_h_RMS = n_h # if no viscosity data set, RMS array is simply same length as hyperparameter array
     n_params = len(m) + len(h)
     prior_m = prior(priors[0,:], priors[1,:], m)
     prior_h = prior(hyperpriors[0,:], hyperpriors[1,:], h)
@@ -29,7 +33,8 @@ def run_test_algorithm(n_trials, n_burnin, n_static, x0, m0, h0, priors, hyperpr
     alpha_ideal = 0.234
     gamma = (2.38**2)/n_params
     model = np.zeros((n_params, n_trials))
-    RMS = np.zeros((n_h, n_trials))
+    RMS = np.zeros((n_h_RMS, n_trials))
+    print(np.shape(RMS), n_h, np.shape(RMS_x), RMS_x)
     avg_model = np.zeros(n_params)
     track_posterior = np.zeros((1, n_trials))
     accepted_model = []
@@ -40,7 +45,7 @@ def run_test_algorithm(n_trials, n_burnin, n_static, x0, m0, h0, priors, hyperpr
         if (i-1)%1000 == 0:
             print(i) 
             #print(i, np.abs((n_accepted / i) - alpha_ideal), prior_x + likelihood_x)
-            print(i, np.abs((n_accepted / i) - alpha_ideal), prior_x + likelihood_x, np.log10(RMS_x[0]) - x[n_m:])
+            print(i, np.abs((n_accepted / i) - alpha_ideal), prior_x + likelihood_x, [np.log10(RMS_x[y] - x[n_m + y]) for y in range(len(x[n_m:]))])
             print(time.time() - t_init)
             t_init = time.time()    
         model[:,i] = x
@@ -68,7 +73,7 @@ def run_test_algorithm(n_trials, n_burnin, n_static, x0, m0, h0, priors, hyperpr
     for i in range(n_static, n_trials): 
         if i%1000 == 0: 
             #print(i, np.abs((n_accepted / i) - alpha_ideal), prior_x + likelihood_x)
-            print(i, np.abs((n_accepted / i) - alpha_ideal), prior_x + likelihood_x, np.log10(RMS_x[0]) - x[n_m:])
+            print(i, np.abs((n_accepted / i) - alpha_ideal), prior_x + likelihood_x, [np.log10(RMS_x[y] - x[n_m + y]) for y in range(len(x[n_m:]))])
             print(time.time() - t_init)
             t_init = time.time()
         track_posterior[0, i] = prior_x + likelihood_x
