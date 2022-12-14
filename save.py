@@ -7,7 +7,7 @@ import shutil
 
 def create_output_directory(f = True):
     now = datetime.now()  #takes current time and passes it to the main program, and sets up an output directory
-    now = now.strftime("%Y-%m-%d_%H:%M:%S")
+    now = now.strftime("%Y-%m-%d_%H-%M-%S")
     if f == True:
         os.makedirs('./output/' + now)
         shutil.copyfile('./options/data_selection.txt', './output/' + now + '/data_selection.txt')
