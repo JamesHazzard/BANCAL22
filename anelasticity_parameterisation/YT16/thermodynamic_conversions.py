@@ -53,6 +53,9 @@ y_a = -7.334963115431564676e-23
 y_b = 7.510867653681621105e-12
 y_c = 1.000184023114681908e+00
 
+# Set solidus temperature at 50 km depth
+solidus_50km = np.loadtxt('./data/potential_temperature/solidus_50km_temperature.T').astype(float)
+
 def funcVs(T,Vs_obs,m,dep):
 
   # Difference between observed and calculated temperature
@@ -74,7 +77,7 @@ def Vs_calc(m,T,dep):
   E = m[4]
   Va = m[5]
   dTdz = m[6]
-  sol50 = 1326
+  sol50 = solidus_50km
 
   Pg=(dep/30.)
   P=Pg*1.e9
@@ -146,7 +149,7 @@ def Q_calc(m,Vs,dep):
   E = m[4]
   Va = m[5]
   dTdz = m[6]
-  sol50 = 1326
+  sol50 = solidus_50km
 
   # Initialise parameters for attenuation
   T=optimize.brent(funcVs,brack=(AX,CX),args=(Vs,m,dep,),tol=tol)
@@ -207,7 +210,7 @@ def visc_calc(m,Vs,dep):
   E = m[4]
   Va = m[5]
   dTdz = m[6]
-  sol50 = 1326
+  sol50 = solidus_50km
   
   # Initialise parameters for viscosity
   T=optimize.brent(funcVs,brack=(AX,CX),args=(Vs,m,dep,),tol=tol)
