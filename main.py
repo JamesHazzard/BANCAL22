@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 
 t_start = time.time()
 
-now = create_output_directory(True) # get current time and produce an output directory using this timestamp
+now = create_output_directory(False) # get current time and produce an output directory using this timestamp
 print("Beginning inversion at", now)
 
 data, n_data = get_data() # retrieve inversion data
