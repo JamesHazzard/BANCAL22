@@ -148,7 +148,6 @@ def likelihood(data, m, h, n_xenolith, n_plate, n_adiabat, n_attenuation, n_visc
     P_viscosity = 0
     RMS = np.zeros(n_xenolith + n_plate + n_adiabat + n_attenuation + n_viscosity)
     if n_xenolith > 0: 
-        #for i in range(1):
         for i in range(n_xenolith):
             P_xenolith_individual, RMS_xenolith_individual = likelihood_xenolith(data[0][i], m, h[i])
             P_xenolith += P_xenolith_individual
@@ -163,11 +162,11 @@ def likelihood(data, m, h, n_xenolith, n_plate, n_adiabat, n_attenuation, n_visc
         P_viscosity, RMS[n_xenolith + n_plate + n_adiabat + n_viscosity] = likelihood_viscosity(data[4][0], m, 0)
     return P_xenolith + P_plate + P_adiabat + P_attenuation + P_viscosity, RMS
 
-def likelihood_pure_xenolith(data, m, h, n_xenolith):
+def likelihood_pure_xenolith(data, m, h, n_xenolith, n_plate, n_adiabat, n_attenuation, n_viscosity):
     P_xenolith = 0
-    RMS_xenolith = 0
+    RMS_xenolith = np.zeros(n_xenolith)
     for i in range(n_xenolith):
             P_xenolith_individual, RMS_xenolith_individual = likelihood_xenolith(data[0][i], m, h[i])
             P_xenolith += P_xenolith_individual
-            RMS_xenolith += RMS_xenolith_individual
-    return P_xenolith
+            RMS_xenolith[i] = RMS_xenolith_individual
+    return P_xenolith, RMS_xenolith

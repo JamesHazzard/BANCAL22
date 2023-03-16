@@ -1,5 +1,5 @@
 import numpy as np
-from likelihood import likelihood, likelihood_pure_xenolith
+from likelihood import likelihood
 from prior import prior 
 import time
 
