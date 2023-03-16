@@ -156,7 +156,7 @@ def likelihood(data, m, h, n_xenolith, n_plate, n_adiabat, n_attenuation, n_visc
     if n_plate > 0:
         P_plate, RMS[n_xenolith] = likelihood_Vs_plate(data[1][0], m, h[n_xenolith])
     if n_adiabat > 0:   
-        P_adiabat, RMS[n_xenolith + n_plate] = likelihood_Vs_adiabat_old(data[2][0], m, h[n_xenolith + n_plate])
+        P_adiabat, RMS[n_xenolith + n_plate] = likelihood_Vs_adiabat(data[2][0], m, h[n_xenolith + n_plate])
     if n_attenuation > 0:
         P_attenuation, RMS[n_xenolith + n_plate + n_adiabat] = likelihood_attenuation(data[3][0], m, h[n_xenolith + n_plate + n_adiabat])
     if n_viscosity > 0:
