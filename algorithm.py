@@ -40,8 +40,8 @@ def run_test_algorithm(n_trials, n_burnin, n_static, x0, m0, h0, priors, hyperpr
     t_init=time.time()
 
     for i in range(n_static):
-        if (i-1)%100 == 0:
-            print(i, time.time() - t_init, np.abs((n_accepted / i) - alpha_ideal), prior_x + likelihood_x, [np.log10(RMS_x[y] - x[n_m + y]) for y in range(len(x[n_m:]))])
+        if i%1000 == 0 and i > 0:
+            print(i, "%.2f" % (time.time() - t_init), "%.5f" % (np.abs((n_accepted / i) - alpha_ideal)), "%.1f" % (prior_x + likelihood_x), ["{0:0.2f}".format(np.log10(RMS_x[y] - x[n_m + y])) for y in range(len(x[n_m:]))])
             t_init = time.time()    
         model[:,i] = x
         RMS[:,i] = np.log10(RMS_x)
@@ -66,8 +66,8 @@ def run_test_algorithm(n_trials, n_burnin, n_static, x0, m0, h0, priors, hyperpr
     C = np.cov(model[:,0:n_static]) # empirical covariance for first (n_static - 1) trials
 
     for i in range(n_static, n_trials): 
-        if i%100 == 0: 
-            print(i, time.time() - t_init, np.abs((n_accepted / i) - alpha_ideal), prior_x + likelihood_x, [np.log10(RMS_x[y] - x[n_m + y]) for y in range(len(x[n_m:]))])
+        if i%1000 == 0: 
+            print(i, "%.2f" % (time.time() - t_init), "%.5f" % (np.abs((n_accepted / i) - alpha_ideal)), "%.1f" % (prior_x + likelihood_x), ["{0:0.2f}".format(np.log10(RMS_x[y] - x[n_m + y])) for y in range(len(x[n_m:]))])
             t_init = time.time()
         track_posterior[0, i] = prior_x + likelihood_x
         model[:,i] = x
