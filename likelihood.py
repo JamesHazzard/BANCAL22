@@ -152,6 +152,7 @@ def likelihood(data, m, h, n_xenolith, n_plate, n_adiabat, n_attenuation, n_visc
             P_xenolith_individual, RMS_xenolith_individual = likelihood_xenolith(data[0][i], m, h[i])
             P_xenolith += P_xenolith_individual
             RMS[i] = RMS_xenolith_individual
+    P_xenolith /= n_xenolith
     if n_plate > 0:
         P_plate, RMS[n_xenolith] = likelihood_Vs_plate(data[1][0], m, h[n_xenolith])
     if n_adiabat > 0:   
@@ -159,7 +160,7 @@ def likelihood(data, m, h, n_xenolith, n_plate, n_adiabat, n_attenuation, n_visc
     if n_attenuation > 0:
         P_attenuation, RMS[n_xenolith + n_plate + n_adiabat] = likelihood_attenuation(data[3][0], m, h[n_xenolith + n_plate + n_adiabat])
     if n_viscosity > 0:
-        P_viscosity, RMS[n_xenolith + n_plate + n_adiabat + n_viscosity] = likelihood_viscosity(data[4][0], m, 0)
+        P_viscosity, RMS[n_xenolith + n_plate + n_adiabat + n_attenuation] = likelihood_viscosity(data[4][0], m, 0)
     return P_xenolith + P_plate + P_adiabat + P_attenuation + P_viscosity, RMS
 
 def likelihood_pure_xenolith(data, m, h, n_xenolith, n_plate, n_adiabat, n_attenuation, n_viscosity):
