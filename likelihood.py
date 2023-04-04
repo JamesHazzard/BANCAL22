@@ -152,7 +152,7 @@ def likelihood(data, m, h, n_xenolith, n_plate, n_adiabat, n_attenuation, n_visc
             P_xenolith_individual, RMS_xenolith_individual = likelihood_xenolith(data[0][i], m, h[i])
             P_xenolith += P_xenolith_individual
             RMS[i] = RMS_xenolith_individual
-    P_xenolith /= n_xenolith
+    P_xenolith /= n_xenolith    # geometric average likelihood = arithmetic average log-likelihood for xenolith palaeogeotherm data set
     if n_plate > 0:
         P_plate, RMS[n_xenolith] = likelihood_Vs_plate(data[1][0], m, h[n_xenolith])
     if n_adiabat > 0:   

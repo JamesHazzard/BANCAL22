@@ -18,6 +18,6 @@ def get_starting_model():
 
     m0 = np.random.normal(loc = priors[0,:], scale = priors[1,:]) # Initialise anelasticity model parameters randomly
     #h0 = np.random.normal(loc = hyperpriors[0,:], scale = hyperpriors[1,:]) # Initialise data hyperparameters randomly
-    h0 = np.full(len(hyperpriors[1,:]), 0) # Initialise data hyperparameters at h=1
+    h0 = np.full(len(hyperpriors[1,:]), 0) # Initialise data hyperparameters at h=1 (log_10(h) = 0)
     x0 = np.concatenate((m0, h0)) # Join model params and hyperparams
     return x0, m0, h0, priors, hyperpriors
