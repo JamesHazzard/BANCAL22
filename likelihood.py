@@ -1,12 +1,12 @@
 import numpy as np
 from thermodynamic_conversions import *
 
-def likelihood_xenolith(data, m, h):
+def likelihood_xenolith(data, m, h, h0):
     # Load in file of structure Vs, sig_Vs, T, depth w/ header
     Vs = data[:,2]
     T = data[:,1]
     sig_T = np.full(np.shape(T), 100)
-    weighted_sig_T = (10**h)*sig_T
+    weighted_sig_T = (10**(h+h0))*sig_T
     depth = data[:,0]
     n = len(T)
     T_fromVs = np.zeros(n)
@@ -149,16 +149,15 @@ def likelihood(data, m, h, n_xenolith, n_plate, n_adiabat, n_attenuation, n_visc
     RMS = np.zeros(n_xenolith + n_plate + n_adiabat + n_attenuation + n_viscosity)
     if n_xenolith > 0: 
         for i in range(n_xenolith):
-            P_xenolith_individual, RMS_xenolith_individual = likelihood_xenolith(data[0][i], m, h[i])
+            P_xenolith_individual, RMS_xenolith_individual = likelihood_xenolith(data[0][i], m, h[i + 1], h[0])
             P_xenolith += P_xenolith_individual
             RMS[i] = RMS_xenolith_individual
-    P_xenolith /= n_xenolith    # geometric average likelihood = arithmetic average log-likelihood for xenolith palaeogeotherm data set
     if n_plate > 0:
-        P_plate, RMS[n_xenolith] = likelihood_Vs_plate(data[1][0], m, h[n_xenolith])
+        P_plate, RMS[n_xenolith] = likelihood_Vs_plate(data[1][0], m, h[n_xenolith + 1])
     if n_adiabat > 0:   
-        P_adiabat, RMS[n_xenolith + n_plate] = likelihood_Vs_adiabat(data[2][0], m, h[n_xenolith + n_plate])
+        P_adiabat, RMS[n_xenolith + n_plate] = likelihood_Vs_adiabat(data[2][0], m, h[n_xenolith + n_plate + 1])
     if n_attenuation > 0:
-        P_attenuation, RMS[n_xenolith + n_plate + n_adiabat] = likelihood_attenuation(data[3][0], m, h[n_xenolith + n_plate + n_adiabat])
+        P_attenuation, RMS[n_xenolith + n_plate + n_adiabat] = likelihood_attenuation(data[3][0], m, h[n_xenolith + n_plate + n_adiabat + 1])
     if n_viscosity > 0:
         P_viscosity, RMS[n_xenolith + n_plate + n_adiabat + n_attenuation] = likelihood_viscosity(data[4][0], m, 0)
     return P_xenolith + P_plate + P_adiabat + P_attenuation + P_viscosity, RMS

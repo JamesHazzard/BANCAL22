@@ -14,12 +14,15 @@ def run_test_algorithm(n_trials, n_burnin, n_static, x0, m0, h0, priors, hyperpr
     x = x0
     m = m0
     h = h0
+    print(h)
     n_m = len(m)
     n_h = len(h)
     if n_viscosity > 0:
         n_h_RMS = n_h + 1 # if viscosity data set being used, track RMS, but do not use hyperparameter on this data set
     else: 
         n_h_RMS = n_h # if no viscosity data set, RMS array is simply same length as hyperparameter array
+    if n_xenolith > 0:
+        n_h_RMS -= 1
     n_params = len(m) + len(h)
     prior_m = prior(priors[0,:], priors[1,:], m)
     prior_h = prior(hyperpriors[0,:], hyperpriors[1,:], h)
@@ -41,7 +44,7 @@ def run_test_algorithm(n_trials, n_burnin, n_static, x0, m0, h0, priors, hyperpr
 
     for i in range(n_static):
         if i%100 == 0 and i > 0:
-            print(i, "%.2f" % (time.time() - t_init), "%.3f" % x[3], "%.5f" % (np.abs((n_accepted / i) - alpha_ideal)), "%.1f" % (prior_x + likelihood_x), ["{0:0.2f}".format(np.log10(RMS_x[y])) for y in range(len(x[n_m:]))])
+            print(i, "%.2f" % (time.time() - t_init), "%.3f" % x[3], "%.5f" % (np.abs((n_accepted / i) - alpha_ideal)), "%.1f" % (prior_x + likelihood_x), ["{0:0.2f}".format((x[n_m + y])) for y in range(len(x[n_m:]))])
             t_init = time.time()    
         model[:,i] = x
         RMS[:,i] = np.log10(RMS_x)
@@ -67,7 +70,7 @@ def run_test_algorithm(n_trials, n_burnin, n_static, x0, m0, h0, priors, hyperpr
 
     for i in range(n_static, n_trials): 
         if i%100 == 0: 
-            print(i, "%.2f" % (time.time() - t_init), "%.3f" % x[3], "%.5f" % (np.abs((n_accepted / i) - alpha_ideal)), "%.1f" % (prior_x + likelihood_x), ["{0:0.2f}".format(np.log10(RMS_x[y] - x[n_m + y])) for y in range(len(x[n_m:]))])
+            print(i, "%.2f" % (time.time() - t_init), "%.3f" % x[3], "%.5f" % (np.abs((n_accepted / i) - alpha_ideal)), "%.1f" % (prior_x + likelihood_x), ["{0:0.2f}".format((x[n_m + y])) for y in range(len(x[n_m:]))])
             t_init = time.time()
         track_posterior[0, i] = prior_x + likelihood_x
         model[:,i] = x
