@@ -67,7 +67,7 @@ def run_test_algorithm(n_trials, n_burnin, n_static, x0, m0, h0, priors, hyperpr
 
     for i in range(n_static, n_trials): 
         if i%100 == 0: 
-            print(i, "%.2f" % (time.time() - t_init), "%.3f" % x[3], "%.5f" % (np.abs((n_accepted / i) - alpha_ideal)), "%.1f" % (prior_x + likelihood_x), ["{0:0.2f}".format(np.log10(RMS_x[y] - x[n_m + y])) for y in range(len(x[n_m:]))])
+            print(i, "%.2f" % (time.time() - t_init), "%.3f" % x[3], "%.5f" % (np.abs((n_accepted / i) - alpha_ideal)), "%.1f" % (prior_x + likelihood_x), ["{0:0.2f}".format(np.log10(RMS_x[y])) for y in range(len(x[n_m:]))])
             t_init = time.time()
         track_posterior[0, i] = prior_x + likelihood_x
         model[:,i] = x
