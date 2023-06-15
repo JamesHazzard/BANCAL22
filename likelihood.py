@@ -139,7 +139,6 @@ def likelihood_viscosity(data, m, h):
     RMS = np.sqrt((mean_eta - mean_eta_fromVs)**2) / sig_eta[0]
     return P, RMS
 
-
 def likelihood(data, m, h, n_xenolith, n_plate, n_adiabat, n_attenuation, n_viscosity):
     P_xenolith = 0
     P_plate = 0

@@ -4,7 +4,6 @@ from save import *
 from data import *
 from prior import get_starting_model
 import time
-import matplotlib.pyplot as plt
 
 t_start = time.time()
 
@@ -17,7 +16,7 @@ x0, m0, h0, priors, hyperpriors = get_starting_model() # generate a starting mod
 n_trials = 400000
 n_burnin = int(0.5*n_trials)
 n_static = 999
-samples, RMS, track_posterior = run_test_algorithm(n_trials, n_burnin, n_static, x0, m0, h0, priors, hyperpriors, data, n_data)
+samples, RMS, track_posterior = run_algorithm(n_trials, n_burnin, n_static, x0, m0, h0, priors, hyperpriors, data, n_data)
 stack = np.concatenate((track_posterior.T, samples.T, RMS.T), axis = 1)
 
 t_end = time.time()
