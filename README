@@ -1,4 +1,4 @@
-Welcome to BANCAL22, a code written to allow one to perform a Bayesian inversion for the calibration of experimental parameterisations of anelasticity.
+### Welcome to BANCAL22, a code written to allow one to perform a Bayesian inversion for the calibration of experimental parameterisations of anelasticity.
 
 This code is functional, but still in a state of development, and will be updated soon with more user-friendly features and instructions. 
 
@@ -28,3 +28,11 @@ Use:
 - Select choice of algorithm / data / parameterisation by modifying files in the options directory
 - Run setup.py to apply these choices to the working directory 
 - Run main.py to begin the inversion 
+
+Dependencies:
+- Python (3.8.10)
+- numpy (1.22.3)
+- pandas (1.5.3)
+- scipy (1.8.0)
+
+This code was developed on an Ubuntu (20.04) system.
