@@ -37,6 +37,7 @@ def select_param():
 
     param_selection = str(np.genfromtxt('./options/parameterisation_selection.txt', dtype = 'str'))
     shutil.copyfile('./anelasticity_parameterisation/'+param_selection+'/thermodynamic_conversions.py', './thermodynamic_conversions.py')
+    shutil.copyfile('./anelasticity_parameterisation/'+param_selection+'/likelihood.py', './likelihood.py')
     shutil.copyfile('./anelasticity_parameterisation/'+param_selection+'/priors.txt', './priors.txt')
 
     return None
