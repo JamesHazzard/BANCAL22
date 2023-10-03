@@ -52,9 +52,10 @@ def likelihood_Vs_plate(data, m, h):
     Vs_fromT = np.zeros(n)
     Vs_diff = np.zeros(n)
     RMS = 0 
-    Vs_fromT = Vs_calc(m, T, depth)
-    Vs_diff = ((Vs - Vs_fromT) / weighted_sig_Vs)**2
-    RMS = np.sum((Vs - Vs_fromT)**2)
+    for i in range(n):
+        Vs_fromT[i] = Vs_calc(m, T[i], depth[i])
+        Vs_diff[i] = ((Vs[i] - Vs_fromT[i]) / weighted_sig_Vs[i])**2
+        RMS += (Vs[i] - Vs_fromT[i])**2
     chi_squared = np.sum(Vs_diff)
     P = -0.5 * chi_squared - np.log(((2*np.pi)**(n/2))*np.prod(weighted_sig_Vs, dtype=np.longdouble)*1e+150) + np.log(1e+150)
     RMS = np.sqrt(RMS / n) / np.mean(sig_Vs)
@@ -91,9 +92,10 @@ def likelihood_Vs_adiabat_old(data, m, h):
     Vs_fromT = np.zeros(n)
     Vs_diff = np.zeros(n)
     RMS = 0 
-    Vs_fromT = Vs_calc(m, T, depth)
-    Vs_diff = ((Vs - Vs_fromT) / weighted_sig_Vs)**2
-    RMS = np.sum((Vs - Vs_fromT)**2)
+    for i in range(n):
+        Vs_fromT[i] = Vs_calc(m, T[i], depth[i])
+        Vs_diff[i] = ((Vs[i] - Vs_fromT[i]) / weighted_sig_Vs[i])**2
+        RMS += (Vs[i] - Vs_fromT[i])**2
     chi_squared = np.sum(Vs_diff)
     P = -0.5 * chi_squared - np.log(((2*np.pi)**(n/2))*np.prod(weighted_sig_Vs, dtype=np.longdouble)*1e+150) + np.log(1e+150)
     RMS = np.sqrt(RMS / n) / np.mean(sig_Vs)
