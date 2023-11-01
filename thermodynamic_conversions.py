@@ -54,8 +54,22 @@ y_b = 7.510867653681621105e-12
 y_c = 1.000184023114681908e+00
 
 # Set solidus temperature at 50 km depth
-#solidus_50km = np.loadtxt('./data/potential_temperature/solidus_50km_temperature.T').astype(float)
-solidus_50km = 1380
+solidus_50km = np.loadtxt('./data/potential_temperature/solidus_50km_temperature.T').astype(float)
+#solidus_50km = 1380
+
+# Set tansh parameters
+Ap_x0 = 0.92952
+Ap_ymin = 0.012286
+Ap_ymax = 0.03
+Ap_k = 84.511
+sigmap_x0 = 0.95338
+sigmap_ymin = 4.0
+sigmap_ymax = 7.0
+sigmap_k = 16.675
+Aeta_x0 = 0.94986
+Aeta_ymin = 1.0
+Aeta_ymax = 0.2
+Aeta_k = 41.587
 
 def funcVs(T,Vs_obs,m,dep):
 
@@ -94,9 +108,9 @@ def Vs_calc(m,T,dep):
   Tsol=sol50+(dTdz*(dep-50.))
   Tn=TK/(Tsol+273.)
   # Initialise parameters for raw Vs
-  Ap = calc_tansh_continuousstep(Tn,0.92954,0.010088,0.03,68.600)
-  sigmap = calc_tansh_continuousstep(Tn,0.95274,4.0,7.0,21.082)
-  Aeta = calc_tansh_continuousstep(Tn,0.94986,1.0,0.2,41.587)
+  Ap = calc_tansh_continuousstep(Tn,Ap_x0,Ap_ymin,Ap_ymax,Ap_k)
+  sigmap = calc_tansh_continuousstep(Tn,sigmap_x0,sigmap_ymin,sigmap_ymax,sigmap_k)
+  Aeta = calc_tansh_continuousstep(Tn,Aeta_x0,Aeta_ymin,Aeta_ymax,Aeta_k)
 
   # Work out viscosity given A
   eta=((eta0*np.exp((E/R)*(1./TK-1./TKr))*np.exp((Va/R)*(P/TK-Pr/TKr)))*Aeta)
@@ -151,9 +165,9 @@ def Q_calc(m,Vs,dep):
   Tn=TK/(Tsol+273.)
 
   # Initialise parameters for raw Vs
-  Ap = calc_tansh_continuousstep(Tn,0.92954,0.010088,0.03,68.600)
-  sigmap = calc_tansh_continuousstep(Tn,0.95274,4.0,7.0,21.082)
-  Aeta = calc_tansh_continuousstep(Tn,0.94986,1.0,0.2,41.587)
+  Ap = calc_tansh_continuousstep(Tn,Ap_x0,Ap_ymin,Ap_ymax,Ap_k)
+  sigmap = calc_tansh_continuousstep(Tn,sigmap_x0,sigmap_ymin,sigmap_ymax,sigmap_k)
+  Aeta = calc_tansh_continuousstep(Tn,Aeta_x0,Aeta_ymin,Aeta_ymax,Aeta_k)
 
   # Work out viscosity given A
   eta=((eta0*np.exp((E/R)*(1./TK-1./TKr))*np.exp((Va/R)*(P/TK-Pr/TKr)))*Aeta)
