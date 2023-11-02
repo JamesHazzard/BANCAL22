@@ -58,14 +58,14 @@ solidus_50km = np.loadtxt('./data/potential_temperature/solidus_50km_temperature
 #solidus_50km = 1380
 
 # Set tansh parameters
-Ap_x0 = 0.92952
-Ap_ymin = 0.012286
+Ap_x0 = 0.93128
+Ap_ymin = 0.010265
 Ap_ymax = 0.03
-Ap_k = 84.511
-sigmap_x0 = 0.95338
+Ap_k = 68.929
+sigmap_x0 = 0.97673
 sigmap_ymin = 4.0
 sigmap_ymax = 7.0
-sigmap_k = 16.675
+sigmap_k = 9.4906
 Aeta_x0 = 0.94986
 Aeta_ymin = 1.0
 Aeta_ymax = 0.2
