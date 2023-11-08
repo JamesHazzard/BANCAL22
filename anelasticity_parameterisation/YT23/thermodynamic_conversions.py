@@ -62,14 +62,14 @@ Ap_x0 = 9.318289237725828622e-01
 Ap_ymin = 2.348093532601332710e-03
 Ap_ymax = 3.247295805286740111e-02
 Ap_k = 1.603059120445337626e+01
-sigmap_x0 = 0.97673
+sigmap_x0 = Ap_x0
 sigmap_ymin = 3.948075576102661799e+00
 sigmap_ymax = 6.579597885717167749e+00
-sigmap_k = 1.603059120445337626e+01
-Aeta_x0 = 0.94986
+sigmap_k = Ap_k
+Aeta_x0 = Ap_x0
 Aeta_ymin = 1.0
 Aeta_ymax = 0.2
-Aeta_k = 1.603059120445337626e+01
+Aeta_k = Ap_k
 
 def funcVs(T,Vs_obs,m,dep):
 
