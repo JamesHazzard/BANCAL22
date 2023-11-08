@@ -58,18 +58,18 @@ solidus_50km = np.loadtxt('./data/potential_temperature/solidus_50km_temperature
 #solidus_50km = 1380
 
 # Set tansh parameters
-Ap_x0 = 0.93128
-Ap_ymin = 0.010265
-Ap_ymax = 0.03
-Ap_k = 68.929
+Ap_x0 = 9.318289237725828622e-01
+Ap_ymin = 2.348093532601332710e-03
+Ap_ymax = 3.247295805286740111e-02
+Ap_k = 1.603059120445337626e+01
 sigmap_x0 = 0.97673
-sigmap_ymin = 4.0
-sigmap_ymax = 7.0
-sigmap_k = 9.4906
+sigmap_ymin = 3.948075576102661799e+00
+sigmap_ymax = 6.579597885717167749e+00
+sigmap_k = 1.603059120445337626e+01
 Aeta_x0 = 0.94986
 Aeta_ymin = 1.0
 Aeta_ymax = 0.2
-Aeta_k = 41.587
+Aeta_k = 1.603059120445337626e+01
 
 def funcVs(T,Vs_obs,m,dep):
 
